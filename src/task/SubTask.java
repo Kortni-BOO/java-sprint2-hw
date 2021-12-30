@@ -3,8 +3,8 @@ package task;
 public class SubTask extends Task {
     private int epicId;
 
-    public SubTask(String title, String subtitle, int id, String status, int epicId) {
-        super(title, subtitle, id, status);
+    public SubTask(String title, String subtitle, String status, int epicId) {
+        super(title, subtitle, status);
         this.epicId = epicId;
     }
     //получаем id эпика
@@ -17,7 +17,7 @@ public class SubTask extends Task {
         return "SubTask{" + // имя класса
                 "title='" + title + '\'' + // поле1=значение1
                 ", subtitle='" + subtitle + '\'' + // поле2=значение2
-                ", id=" + id + // поле3=значение3
+                ", id=" + getId() + // поле3=значение3
                 '}';
     }
 

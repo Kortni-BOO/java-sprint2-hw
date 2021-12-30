@@ -5,15 +5,31 @@ import java.util.Objects;
 public class Task {
     public String title;
     public String subtitle;
-    public int id;
+    private int id;
     public String status;
 
-    public Task(String title, String subtitle, int id, String status) {
+    public Task(String title, String subtitle, String status) {
         this.title = title;
         this.subtitle = subtitle;
-        this.id = id;
         this.status = status;
+
     }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    //Даем id
+    public int getNewId() {
+        int newId = 0;
+        newId =+ id;
+        return newId;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -12,10 +12,10 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" + // имя класса
-                "title='" + title + '\'' + // поле1=значение1
-                ", subtitle='" + subtitle + '\'' + // поле2=значение2
-                ", id=" + getId() + // поле3=значение3
+        return "Epic{" +
+                "title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", id=" + getId() +
                 '}';
     }
 

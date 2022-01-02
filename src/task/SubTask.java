@@ -14,8 +14,8 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask{" + // имя класса
-                "title='" + title + '\'' + // поле1=значение1
+        return "SubTask{" +
+                "title='" + title + '\'' +
                 ", subtitle='" + subtitle + '\'' + "status=" + getStatus() +
                 ", idEpic=" + getEpicId() + " id=" + getId() +
                 '}';

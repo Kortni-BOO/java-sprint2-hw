@@ -1,8 +1,6 @@
 import task.Epic;
-import task.EpicList;
 import task.SubTask;
 import task.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,6 +24,8 @@ public class Main {
         subtask1.setStatus("DONE");
         SubTask subtask2 = new SubTask("Купить платье>", "с разрезом",epic.getId());
         subtask2.setStatus("DONE");
+
+        manager.removeTask();
 
         subtasks.add(subtask);
 

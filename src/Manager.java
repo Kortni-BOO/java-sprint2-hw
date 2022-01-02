@@ -91,4 +91,50 @@ public class Manager {
     public void removeTaskById(int id){
         store.remove(id);
     }
+
+    //Обновление статуса эпика
+    public void updateStatusEpic(Epic epic) {
+        ArrayList<String> sub = new ArrayList<>();
+        //epic.status = "";
+
+        for (SubTask status : epic.subTasks) {
+            sub.add(status.getStatus());
+        }
+
+        for(int i = 0; i < sub.size(); i++) {
+
+            if(sub.isEmpty()) {
+                epic.setStatus("NEW");
+            } else if(sub.contains("NEW") && sub.contains("DONE")) {
+                epic.setStatus("IN_PROGRESS");
+            } else {
+                epic.setStatus(sub.get(i));
+            }
+
+        }
+    }
+
 }
+
+/*
+            if(status.equals(status) && status.equals("NEW")) {
+                epic.setStatus("NEW");
+            } else if(status.equals(status) && status.equals("DONE")) {
+                epic.setStatus("DONE");
+            } else {
+                epic.setStatus("IN_PROGRESS");
+            }
+
+
+                    for(int i = 0; i < sub.size(); i++) {
+            if(sub.get(i).equals("NEW")) {
+                epic.setStatus("NEW");
+            } else if(sub.get(i).equals(sub.get(i)) && sub.get(i).equals("DONE")) {
+                epic.setStatus("DONE");
+            } else {
+                epic.setStatus("IN_PROGRESS");
+            }
+        }
+
+
+*/

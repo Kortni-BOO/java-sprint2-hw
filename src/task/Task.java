@@ -6,14 +6,21 @@ public class Task {
     public String title;
     public String subtitle;
     private int id;
-    public String status;
+    private String status;
 
-    public Task(String title, String subtitle, String status) {
+    public Task(String title, String subtitle) {
         this.title = title;
         this.subtitle = subtitle;
-        this.status = status;
-
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }

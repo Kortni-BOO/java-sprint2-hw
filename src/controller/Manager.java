@@ -1,6 +1,9 @@
-import task.Epic;
-import task.SubTask;
-import task.Task;
+package controller;
+
+import model.Epic;
+import model.Status;
+import model.SubTask;
+import model.Task;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,7 +11,7 @@ import java.util.HashMap;
 public class Manager {
     //коллекция для хранения задач
     HashMap<Integer, Task> store = new HashMap<>();
-    int newId = 0;
+    static int newId = 0;
 
     public int getNewId() {
         return ++newId;
@@ -16,7 +19,6 @@ public class Manager {
 
     //Получение списка всех задач. Тут вернуть колекцию
     public Collection<Task> getTask() {
-        //погоди
         ArrayList<Task> tasks = new ArrayList<>();
         for(Task task : store.values()) {
             if(task.getClass() == Task.class) {
@@ -26,7 +28,7 @@ public class Manager {
         return tasks;
     }
 
-    //Получение списка всех эпиков. Тут список эпиков?
+    //Получение списка всех эпиков.
     public Collection<Epic> getEpics() {
         ArrayList<Epic> epics = new ArrayList<>();
         for(Task epic : store.values()) {
@@ -71,21 +73,22 @@ public class Manager {
 
     //Обновление статуса эпика
     public void updateStatusEpic(Epic epic) {
-        ArrayList<String> sub = new ArrayList<>();
+        ArrayList<Status> sub = new ArrayList<>();
 
         for (SubTask status : epic.subTasks) {
             sub.add(status.getStatus());
         }
         for(int i = 0; i < sub.size(); i++) {
             if(sub.isEmpty()) {
-                epic.setStatus("NEW");
-            } else if(sub.contains("NEW") && sub.contains("DONE")) {
-                epic.setStatus("IN_PROGRESS");
+                epic.setStatus(Status.NEW);
+            } else if(sub.contains(Status.NEW) && sub.contains(Status.DONE)) {
+                epic.setStatus(Status.IN_PROGRESS);
             } else {
                 epic.setStatus(sub.get(i));
             }
 
         }
+        System.out.println(epic.getStatus());
     }
 
 }

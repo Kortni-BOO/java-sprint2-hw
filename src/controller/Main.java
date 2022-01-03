@@ -1,6 +1,10 @@
-import task.Epic;
-import task.SubTask;
-import task.Task;
+package controller;
+
+import controller.Manager;
+import model.Epic;
+import model.Status;
+import model.SubTask;
+import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,11 +23,11 @@ public class Main {
         Manager manager = new Manager();
         manager.add(epic);
         SubTask subtask = new SubTask("Отдать долги>", "За все тачки и квартиру", epic.getId());
-        subtask.setStatus("DONE");
+        subtask.setStatus(Status.NEW);
         SubTask subtask1 = new SubTask("Похудеть", "до 55",epic.getId());
-        subtask1.setStatus("DONE");
+        subtask1.setStatus(Status.NEW);
         SubTask subtask2 = new SubTask("Купить платье>", "с разрезом",epic.getId());
-        subtask2.setStatus("DONE");
+        subtask2.setStatus(Status.NEW);
 
         manager.removeTask();
 
@@ -59,21 +63,6 @@ public class Main {
 
         manager.removeTaskById(1);
         manager.updateStatusEpic(epic);
-        //System.out.println(manager.add(task));
-        //ArrayList<Subtask> subtasks = new ArrayList<>();
-
-        //EpicList epic1 = new EpicList(task, subtasks);
-        //System.out.println(epic1.task);
-
-        //System.out.println(task);
-        //System.out.println(subtask);
-        //System.out.println(task2);
-        //System.out.println(task3);
-        //System.out.println(task4);
-        //System.out.println(task.id  + " " + task2.id);
-        //System.out.println(task2.id == task4.id);
-        //System.out.println(store.values());
-
 
     }
 }

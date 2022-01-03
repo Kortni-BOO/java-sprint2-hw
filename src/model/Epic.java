@@ -1,4 +1,4 @@
-package task;
+package model;
 
 import java.util.ArrayList;
 
@@ -19,5 +19,5 @@ public class Epic extends Task {
                 '}';
     }
 
-
 }
+

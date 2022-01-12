@@ -52,7 +52,7 @@ public class Main {
 
         manager.getEpics();
         manager.getTask();
-        manager.getSubtaskByEpic(epic);
+        manager.getSubtaskByEpic(1);
         manager.getTaskById(1);
         manager.getTaskById(2);
         manager.getTaskById(3);

@@ -12,17 +12,16 @@ public class InMemoryTasksManager implements TaskManager{
     //коллекция для хранения задач
     HashMap<Integer, Task> store = new HashMap<>();
     ArrayList<Task> storage = new ArrayList<>();
-    static int newId = 0;
+    private static int newId = 0;
     int limit = 10;
 
-    @Override
-    public int getNewId() {
+    protected int getNewId() {
         return ++newId;
     }
 
     //Получение списка всех задач. Тут вернуть колекцию
     @Override
-    public Collection<Task> getTask() {
+    public ArrayList<Task> getTask() {
         ArrayList<Task> tasks = new ArrayList<>();
         for(Task task : store.values()) {
             if(task.getClass() == Task.class) {
@@ -35,7 +34,7 @@ public class InMemoryTasksManager implements TaskManager{
 
     //Получение списка всех эпиков.
     @Override
-    public Collection<Epic> getEpics() {
+    public ArrayList<Epic> getEpics() {
         ArrayList<Epic> epics = new ArrayList<>();
         for(Task epic : store.values()) {
             if(epic.getClass() == Epic.class) {
@@ -48,13 +47,12 @@ public class InMemoryTasksManager implements TaskManager{
 
     //Получение списка всех подзадач определённого эпика.
     @Override
-    public ArrayList<SubTask> getSubtaskByEpic(Epic epic) {
-        for (Task sub : epic.subTasks){
-            storage.add(sub);
-        }
+    public ArrayList<SubTask> getSubtaskByEpic(int id) {
+        Epic epic = (Epic) store.get(id);
         return epic.subTasks;
     }
 
+    @Override
     public Task getTaskById(int id) {
         return store.get(id);
     }
@@ -109,6 +107,7 @@ public class InMemoryTasksManager implements TaskManager{
     }
 
     //Возвращает последние 10 просмотренных задач
+    @Override
     public ArrayList<Task> history() {
         while (storage.size() > limit) {
             storage.remove(0);

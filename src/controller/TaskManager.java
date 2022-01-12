@@ -1,7 +1,6 @@
 package controller;
 
 import model.Epic;
-import model.Status;
 import model.SubTask;
 import model.Task;
 
@@ -10,20 +9,15 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public interface TaskManager {
-        //коллекция для хранения задач
-        HashMap<Integer, Task> store = new HashMap<>();
-        static int newId = 0;
-
-        public int getNewId();
-
         //Получение списка всех задач. Тут вернуть колекцию
-        public Collection<Task> getTask();
+        public ArrayList<Task> getTask();
 
         //Получение списка всех эпиков.
-        public Collection<Epic> getEpics();
+        public ArrayList<Epic> getEpics();
 
         //Получение списка всех подзадач определённого эпика.
-        public ArrayList<SubTask> getSubtaskByEpic(Epic epic);
+        //public ArrayList<SubTask> getSubtaskByEpic(Epic epic);
+        public ArrayList<SubTask> getSubtaskByEpic(int id);
 
         public Task getTaskById(int id);
 
@@ -43,4 +37,6 @@ public interface TaskManager {
 
         //Обновление статуса эпика
         public void updateStatusEpic(Epic epic);
+
+        public ArrayList<Task> history();
 }

@@ -3,10 +3,8 @@ package controller;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
         //Получение списка всех задач. Тут вернуть колекцию
@@ -38,5 +36,5 @@ public interface TaskManager {
         //Обновление статуса эпика
         public void updateStatusEpic(Epic epic);
 
-        public ArrayList<Task> history();
+        public List<Task> history();
 }

@@ -7,14 +7,18 @@ import model.SubTask;
 import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        //LinkedList<String>
         System.out.println("Пришло время практики!");
         Task task = new Task("Купить помидорки", "На салат");
         Task task2 = new Task("Прочитать про сквозную авторизация", "Ну просто");
         Task task3 = new Task("Купить цветы", "Любоваться");
 
+        List<String> list = new LinkedList<>();
 
 
         HashMap<Integer, Task> store = new HashMap<>();
@@ -68,6 +72,5 @@ public class Main {
         manager.removeTaskById(1);
         manager.updateStatusEpic(epic);
         manager.history();
-
     }
 }

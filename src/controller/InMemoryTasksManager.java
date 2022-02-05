@@ -5,13 +5,13 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTasksManager implements TaskManager{
     //коллекция для хранения задач
     HashMap<Integer, Task> store = new HashMap<>();
-    ArrayList<Task> storage = new ArrayList<>();
+    InMemoryHistoryManager newList = new InMemoryHistoryManager();
     private static int newId = 0;
     int limit = 10;
 
@@ -26,7 +26,8 @@ public class InMemoryTasksManager implements TaskManager{
         for(Task task : store.values()) {
             if(task.getClass() == Task.class) {
                 tasks.add(task);
-                storage.add(task);
+                //storage.add(task);
+                newList.add(task);
             }
         }
         return tasks;
@@ -39,7 +40,8 @@ public class InMemoryTasksManager implements TaskManager{
         for(Task epic : store.values()) {
             if(epic.getClass() == Epic.class) {
                 epics.add((Epic)epic);
-                storage.add((Epic)epic);
+                //storage.add((Epic)epic);
+                newList.add(epic);
             }
         }
         return epics;
@@ -72,13 +74,11 @@ public class InMemoryTasksManager implements TaskManager{
         task.setId(id);
         store.put(id, task);
     }
-
     //Удаление ранее добавленных задач — всех.
     @Override
     public void removeTask() {
         store.clear();
     }
-
     //Удаление ранее добавленных задач — по идентификатору.
     @Override
     public void removeTaskById(int id){
@@ -101,19 +101,14 @@ public class InMemoryTasksManager implements TaskManager{
             } else {
                 epic.setStatus(sub.get(i));
             }
-
         }
         System.out.println(epic.getStatus());
     }
 
     //Возвращает последние 10 просмотренных задач
     @Override
-    public ArrayList<Task> history() {
-        while (storage.size() > limit) {
-            storage.remove(0);
-        }
-
-
+    public List<Task> history() {
+        List<Task> storage = newList.getHistory();
         return storage;
     }
 

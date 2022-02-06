@@ -7,15 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager{
-    public Node<Task> head; //first
-    public Node<Task> tail; //last
+    public Node head; //first
+    public Node tail; //last
     public int size = 0;
-    HashMap<Integer, Node<Task>> history = new HashMap<>();
+    HashMap<Integer, Node> history = new HashMap<>();
 
     @Override
     public void add(Task task) {
         if(history.containsKey(task.getId())) {
-            remove(history.get(task.getId()));
+            //remove(history.get(task.getId()));
+            remove(task.getId());
             linkLast(task);
         } else {
             linkLast(task);
@@ -23,8 +24,8 @@ public class InMemoryHistoryManager implements HistoryManager{
     };
 
     public void linkLast(Task task) {
-        final Node<Task> l = tail;
-        final Node<Task> newNode = new Node<>(l, task, null);
+        final Node l = tail;
+        final Node newNode = new Node(l, task, null);
         tail = newNode;
         history.put(task.getId(), newNode);
         if (l == null) {
@@ -39,7 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         if (head == null) {
             return;
         }
-        Node<Task> e = head;
+        Node e = head;
         while (e.next != null) {
             System.out.println(e.data);
             e = e.next;
@@ -49,10 +50,11 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
-    public void remove(Node <Task> task) {
-        Node<Task> element = task;
-        Node<Task> next = element.next;
-        Node<Task> prev = element.prev;
+    public void remove(int id) {
+        //Node<Task> element = task;  Node <Task> task
+        Node element = history.get(id);
+        Node next = element.next;
+        Node prev = element.prev;
         if(prev == null) {
             head = next;
         } else {
@@ -75,7 +77,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         if (head == null) {
             return null;
         }
-        Node<Task> oldHead = head;
+        Node oldHead = head;
         while (oldHead.next != null) {
             tasks.add(oldHead.data);
             oldHead = oldHead.next;

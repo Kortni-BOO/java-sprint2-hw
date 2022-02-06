@@ -51,6 +51,7 @@ public class InMemoryTasksManager implements TaskManager{
     @Override
     public ArrayList<SubTask> getSubtaskByEpic(int id) {
         Epic epic = (Epic) store.get(id);
+        newList.add(epic);
         return epic.subTasks;
     }
 
@@ -83,6 +84,7 @@ public class InMemoryTasksManager implements TaskManager{
     @Override
     public void removeTaskById(int id){
         store.remove(id);
+        newList.remove(id);
     }
 
     //Обновление статуса эпика
@@ -109,6 +111,7 @@ public class InMemoryTasksManager implements TaskManager{
     @Override
     public List<Task> history() {
         List<Task> storage = newList.getHistory();
+        System.out.println(storage);
         return storage;
     }
 

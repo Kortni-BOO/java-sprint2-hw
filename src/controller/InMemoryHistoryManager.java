@@ -42,10 +42,10 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
         Node e = head;
         while (e.next != null) {
-            System.out.println(e.data);
+            //System.out.println(e.data);
             e = e.next;
         }
-        System.out.println(e.data);
+        //System.out.println(e.data);
 
     }
 

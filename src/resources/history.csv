@@ -1,0 +1,8 @@
+id,type,name,status,description,epic
+1,EPIC,Отправка задания,DONE,ТЗ 4
+2,TASK,Купить помидорки,NEW,На салат
+3,SUBTASK,Посмотреть,все замечания,NEW,1
+4,SUBTASK,Исправить,все замечания,NEW,1
+5,TASK,Рассказать о своем выборе,null,Работы
+
+2,

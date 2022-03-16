@@ -10,10 +10,9 @@ import java.util.List;
 
 public class InMemoryTasksManager implements TaskManager{
     //коллекция для хранения задач
-    HashMap<Integer, Task> store = new HashMap<>();
-    InMemoryHistoryManager newList = new InMemoryHistoryManager();
-    private static int newId = 0;
-    int limit = 10;
+    protected static HashMap<Integer, Task> store = new HashMap<>();
+    protected static InMemoryHistoryManager newList = new InMemoryHistoryManager();
+    protected static int newId = 0;
 
     protected int getNewId() {
         return ++newId;
@@ -30,6 +29,7 @@ public class InMemoryTasksManager implements TaskManager{
                 newList.add(task);
             }
         }
+        //System.out.println(tasks);
         return tasks;
     }
 
@@ -50,9 +50,18 @@ public class InMemoryTasksManager implements TaskManager{
     //Получение списка всех подзадач определённого эпика.
     @Override
     public ArrayList<SubTask> getSubtaskByEpic(int id) {
-        Epic epic = (Epic) store.get(id);
-        newList.add(epic);
-        return epic.subTasks;
+        ArrayList<SubTask> subTasks = new ArrayList<>();
+        if(!store.containsKey(id)) {
+            //System.out.println("l");
+            return null;
+        } else {
+            Epic epic = (Epic) store.get(id);
+            newList.add(epic);
+            subTasks.addAll(epic.getSubtask());
+            //System.out.println(subTasks);
+        }
+        //return epic.subTasks;
+        return subTasks;
     }
 
     @Override
@@ -83,6 +92,10 @@ public class InMemoryTasksManager implements TaskManager{
     //Удаление ранее добавленных задач — по идентификатору.
     @Override
     public void removeTaskById(int id){
+        if(store.get(id).getClass() == Epic.class) {
+            Epic epic = (Epic) store.get(id);
+            epic.getSubtask().clear();
+        }
         store.remove(id);
         newList.remove(id);
     }
@@ -91,8 +104,7 @@ public class InMemoryTasksManager implements TaskManager{
     @Override
     public void updateStatusEpic(Epic epic) {
         ArrayList<Status> sub = new ArrayList<>();
-
-        for (SubTask status : epic.subTasks) {
+        for (SubTask status : epic.getSubtask()) {
             sub.add(status.getStatus());
         }
         for(int i = 0; i < sub.size(); i++) {
@@ -104,14 +116,14 @@ public class InMemoryTasksManager implements TaskManager{
                 epic.setStatus(sub.get(i));
             }
         }
-        System.out.println(epic.getStatus());
+        //System.out.println(epic.getStatus());
     }
 
     //Возвращает последние 10 просмотренных задач
     @Override
     public List<Task> history() {
         List<Task> storage = newList.getHistory();
-        System.out.println(storage);
+        //System.out.println(store);
         return storage;
     }
 

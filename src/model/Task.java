@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Task {
     public String title;
     public String subtitle;
-    private int id;
-    private Status status;
+    public int id;
+    protected Status status;
 
     public Task(String title, String subtitle) {
         this.title = title;
@@ -68,12 +68,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" + // имя класса
-                "title='" + title + '\'' + // поле1=значение1
-                ", subtitle='" + subtitle + '\'' + // поле2=значение2
-                ", id=" + id + // поле3=значение3
-                '}';
+        return title + "," + subtitle + "," + getStatus() + "," + getId();
     }
-
-
 }

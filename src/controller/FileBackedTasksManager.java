@@ -8,7 +8,6 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import error.ManagerSaveException;
@@ -19,7 +18,6 @@ import model.Task;
 
 public class FileBackedTasksManager extends InMemoryTasksManager {
     public File file;
-    static int id = newId;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -98,7 +96,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     //метод создания задачи из строки String value
-    public static Task fromString(String value) throws IOException {
+    public static Task fromString(String value) {
         Task task = new Task("Тест", "test");
         String[] lines = value.split("\\n");
         int epicID = 0;
@@ -177,6 +175,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         for(int i = 0; i < ids.size(); i++) {
             newList.add(store.get(ids.get(i)));
         }
+        System.out.println(store.toString());
         return fileBackedTasksManager;
     }
 
@@ -185,7 +184,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         Task task = new Task("Купить помидорки", "На салат");
         task.setStatus(Status.NEW);
 
-        File file = new File("/Users/makbookair/Desktop/java-sprint2-hw/src/resources", "history.csv");
+        File file = new File("./src/resources", "history.csv");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
         fileBackedTasksManager.getTask();

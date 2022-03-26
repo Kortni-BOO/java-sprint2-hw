@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import error.ManagerSaveException;
 import model.Epic;
@@ -48,6 +51,11 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         ArrayList<SubTask> subTask = super.getSubtaskByEpic(id);
         save();
         return subTask;
+    }
+
+    @Override
+    public void computationTimeEpic(Epic epic) {
+        super.computationTimeEpic(epic);
     }
 
     public void save() {
@@ -97,33 +105,44 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     //метод создания задачи из строки String value
     public static Task fromString(String value) {
-        Task task = new Task("Тест", "test");
+        Task task = new Task("Тест", "test",
+                LocalDateTime.of(2022, 12, 3, 8, 55),
+                121
+        );
         String[] lines = value.split("\\n");
         int epicID = 0;
         ArrayList<SubTask> subtasks = new ArrayList<>();
         for(int i = 1; i < lines.length - 2; i++) {
             String[] lineContents = lines[i].trim().split(",");
             if (lineContents[1].equals("TASK")){
+                /*
                 Task taskNew = new Task(lineContents[2], lineContents[4]);
                 taskNew.setId(Integer.parseInt(lineContents[0]));
                 checkStatus(lineContents[3], taskNew);
                 task = taskNew;
+                */
                 store.put(task.getId(), task);
             } else if (lineContents[1].equals("EPIC") ) {
+                /*
                 Epic epic = new Epic(lineContents[2], lineContents[4]);
                 epic.setId(Integer.parseInt(lineContents[0]));
                 checkStatus(lineContents[3], epic);
                 epicID = epic.getId();
                 task = epic;
+
+                 */
                 store.put(task.getId(), task);
             }  if (lineContents[1].equals("SUBTASK")) {
                 if(Integer.parseInt(lineContents[5]) == epicID) {
+                    /*
                     SubTask subtask = new SubTask(lineContents[2], lineContents[4]);
                     subtask.setEpicId(epicID);
                     subtask.setId(Integer.parseInt(lineContents[0]));
                     checkStatus(lineContents[3], subtask);
                     subtasks.add(subtask);
                     task = subtask;
+
+                     */
                     store.put(task.getId(), task);
                 }
             }
@@ -165,6 +184,11 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return ids;
     }
 
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        return super.getPrioritizedTasks();
+    }
+
 
     static FileBackedTasksManager loadFromFile(File file) throws IOException {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
@@ -179,48 +203,84 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return fileBackedTasksManager;
     }
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
 
-        Task task = new Task("Купить помидорки", "На салат");
+        Task task = new Task("Купить помидорки", "На салат",
+                LocalDateTime.of(2022, 12, 3, 4, 55),
+                121
+        );
         task.setStatus(Status.NEW);
+        System.out.println("Это 1 " + task.getId());
 
         File file = new File("./src/resources", "history.csv");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
         fileBackedTasksManager.getTask();
         ArrayList<SubTask> subtasks = new ArrayList<>();
-        Epic epic = new Epic("Найти второй носок", "С китами");
-        epic.setSubtasks(subtasks);
+        Epic epic = new Epic("Найти второй носок", "С китами",
+                LocalDateTime.of(2022, 12, 3, 8, 55),
+                121
+        );
+
         epic.setStatus(Status.DONE);
         fileBackedTasksManager.add(epic);
-        SubTask subtask = new SubTask("Разобрать ящик", "в комнате");
+        SubTask subtask = new SubTask("Разобрать ящик", "в комнате",
+                LocalDateTime.of(2022, 12, 3, 6, 00),
+                20
+        );
         subtask.setEpicId(epic.getId());
         subtask.setStatus(Status.NEW);
-        SubTask subtask1 = new SubTask("Найти корзину", "солома");
+        SubTask subtask1 = new SubTask("Найти корзину", "солома",
+                LocalDateTime.of(2022, 12, 3, 10, 55),
+                21
+        );
         subtask1.setEpicId(epic.getId());
         subtask1.setStatus(Status.NEW);
-        SubTask subtask2 = new SubTask("Помыть машину", "и коврики");
+        SubTask subtask2 = new SubTask("Помыть машину", "и коврики",
+                LocalDateTime.of(2022, 12, 3, 1, 55),
+                139);
         subtask2.setEpicId(epic.getId());
+
+
 
         subtask2.setStatus(Status.NEW);
         subtasks.add(subtask);
         subtasks.add(subtask1);
         subtasks.add(subtask2);
         fileBackedTasksManager.add(task);
+        System.out.println("Это 2 " + task.getId());
 
+        epic.setSubtasks(subtasks);
+
+        System.out.println("Sub " + epic.getSubtask());
+
+        epic.setSubtasks(subtasks);
         fileBackedTasksManager.add(subtask);
         fileBackedTasksManager.add(subtask1);
         fileBackedTasksManager.getTask();
         fileBackedTasksManager.save();
 
-        Task task3 = new Task("Пить чай без сахара", "зеленый");
+        Task task3 = new Task("Пить чай без сахара", "зеленый",
+                LocalDateTime.of(2022, 12, 3, 2, 55),
+                121
+        );
         task3.setStatus(Status.NEW);
 
         System.out.println("_____________________________________________________________________________________");
-        Task task2 = new Task("Купить вкусняшки", "Для Хло");
+        Task task2 = new Task("Купить вкусняшки", "Для Хло",
+                LocalDateTime.of(2022, 12, 3, 22, 55),
+                121
+        );
+
+        System.out.println("NEW=============================================================================NEW");
+        //System.out.println(epic.endTime);
         task.setStatus(Status.NEW);
+        fileBackedTasksManager.computationTimeEpic(epic);
+        System.out.println("EndTime " + epic.endTime);
         fileBackedTasksManager.add(task2);
+        fileBackedTasksManager.getPrioritizedTasks();
         loadFromFile(file);
+
 
     }
 

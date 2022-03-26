@@ -4,9 +4,9 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager{
     //коллекция для хранения задач
@@ -74,6 +74,7 @@ public class InMemoryTasksManager implements TaskManager{
     @Override
     public void add(Task task) {
         task.setId(getNewId());
+        task.getEndTime();
         store.put(task.getId(), task);
     }
 
@@ -119,12 +120,63 @@ public class InMemoryTasksManager implements TaskManager{
         //System.out.println(epic.getStatus());
     }
 
+    @Override
+    public void computationTimeEpic(Epic epic) {
+        ArrayList<SubTask> sub = epic.getSubtask();
+        epic.startTime = epic.getSubtask().get(0).startTime;
+        if(sub.size() > 1) {
+            for(int i = 0; i < sub.size(); i++) {
+                for(int j = 0; j < sub.size(); j++) {
+                    if(sub.get(i).startTime.isBefore(sub.get(j).startTime)) {
+                        epic.startTime = sub.get(i).startTime;
+                    }
+                }
+            }
+        }
+        System.out.println("Method computationTimeEpic epic.startTime = " + epic.startTime);
+        long time = 0;
+        for (SubTask duration : epic.getSubtask()) {
+            time += duration.duration;
+            epic.endTime = epic.startTime.plusMinutes(time);
+        }
+        System.out.println(time);
+    }
+
     //Возвращает последние 10 просмотренных задач
     @Override
     public List<Task> history() {
         List<Task> storage = newList.getHistory();
         //System.out.println(store);
         return storage;
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        //Set<Ticket> tickets = new TreeSet<>(comparator);
+        Comparator<Task> comparator = new Comparator<Task>() {
+            @Override
+            public int compare(Task o1, Task o2) {
+                if(o1.startTime.isAfter(o2.startTime)) {
+                    return 1;
+                } else if (o1.startTime.isBefore(o2.startTime)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+                //return 0;
+            }
+
+        };
+        TreeSet<Task> tasks = new TreeSet<>(comparator);
+        ArrayList<Task> tasksSort = new ArrayList<>();
+        for(Task taskClass : store.values()) {
+            if(taskClass.getClass() == Task.class || taskClass.getClass() == SubTask.class) {
+                tasksSort.add(taskClass);
+            }
+        }
+        tasks.addAll(tasksSort);
+        System.out.println("Method getPrioritizedTasks : " + tasks.toString());
+        return tasks;
     }
 
 }

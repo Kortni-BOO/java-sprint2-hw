@@ -5,6 +5,7 @@ import model.SubTask;
 import model.Task;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
         //Получение списка всех задач. Тут вернуть колекцию
@@ -35,6 +36,11 @@ public interface TaskManager {
 
         //Обновление статуса эпика
         public void updateStatusEpic(Epic epic);
+        //Подсчет завешения эпика
+        public void computationTimeEpic(Epic epic);
 
         public List<Task> history();
+
+        //возвращает список задач и подзадач в заданном порядке
+        public TreeSet<Task> getPrioritizedTasks();
 }

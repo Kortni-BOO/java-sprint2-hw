@@ -1,41 +1,38 @@
-
 package controller;
 
 import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
+import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
-public class InMemoryTasksManager implements TaskManager{
-    //коллекция для хранения задач
+import static org.junit.jupiter.api.Assertions.*;
+
+abstract class TaskManagerTest <T extends TaskManager> {
     protected static HashMap<Integer, Task> store = new HashMap<>();
     protected static InMemoryHistoryManager newList = new InMemoryHistoryManager();
-    protected static int newId = 0;
+    T element;
 
-    protected int getNewId() {
-        return ++newId;
+    @Test
+    public void shouldReturnAllTask() {
+        element.getTask();
     }
 
     //Получение списка всех задач. Тут вернуть колекцию
-    @Override
     public ArrayList<Task> getTask() {
         ArrayList<Task> tasks = new ArrayList<>();
         for(Task task : store.values()) {
             if(task.getClass() == Task.class) {
                 tasks.add(task);
-                //storage.add(task);
                 newList.add(task);
             }
         }
-        //System.out.println(tasks);
         return tasks;
     }
 
     //Получение списка всех эпиков.
-    @Override
     public ArrayList<Epic> getEpics() {
         ArrayList<Epic> epics = new ArrayList<>();
         for(Task epic : store.values()) {
@@ -49,7 +46,6 @@ public class InMemoryTasksManager implements TaskManager{
     }
 
     //Получение списка всех подзадач определённого эпика.
-    @Override
     public ArrayList<SubTask> getSubtaskByEpic(int id) {
         ArrayList<SubTask> subTasks = new ArrayList<>();
         if(!store.containsKey(id)) {
@@ -65,26 +61,14 @@ public class InMemoryTasksManager implements TaskManager{
         return subTasks;
     }
 
-    @Override
     public Task getTaskById(int id) {
         return store.get(id);
     }
 
-    //Добавление новой задачи, эпика и подзадачи.
-    //Сам объект должен передаваться в качестве параметра.
-    @Override
-    public void add(Task task) {
-        task.setId(getNewId());
-        task.getEndTime();
-        if(checkTime(task)) {
-            store.put(task.getId(), task);
-        }
-        //store.put(task.getId(), task);
-    }
+    public abstract void add(Task task);
 
     //Обновление задачи любого типа по идентификатору.
     //Новая версия объекта передаётся в виде параметра.
-    @Override
     public void updateTask(int id, Task task) {
         task.setId(id);
         if(checkTime(task)) {
@@ -92,14 +76,13 @@ public class InMemoryTasksManager implements TaskManager{
         }
         //store.put(id, task);
     }
+
     //Удаление ранее добавленных задач — всех.
-    @Override
     public void removeTask() {
-        newId = 0;
         store.clear();
     }
+
     //Удаление ранее добавленных задач — по идентификатору.
-    @Override
     public void removeTaskById(int id){
         if(store.get(id).getClass() == Epic.class) {
             Epic epic = (Epic) store.get(id);
@@ -110,7 +93,6 @@ public class InMemoryTasksManager implements TaskManager{
     }
 
     //Обновление статуса эпика
-    @Override
     public void updateStatusEpic(Epic epic) {
         ArrayList<Status> sub = new ArrayList<>();
         for (SubTask status : epic.getSubtask()) {
@@ -128,7 +110,6 @@ public class InMemoryTasksManager implements TaskManager{
         }
     }
 
-    @Override
     public void computationTimeEpic(Epic epic) {
         ArrayList<SubTask> sub = epic.getSubtask();
         epic.startTime = epic.getSubtask().get(0).startTime;
@@ -150,14 +131,12 @@ public class InMemoryTasksManager implements TaskManager{
         System.out.println(time);
     }
 
-    //Возвращает последние 10 просмотренных задач
-    @Override
+    //Возвращает последние просмотренных задач
     public List<Task> history() {
         List<Task> storage = newList.getHistory();
         return storage;
     }
 
-    @Override
     public TreeSet<Task> getPrioritizedTasks() {
         //Set<Ticket> tickets = new TreeSet<>(comparator);
         Comparator<Task> comparator = new Comparator<Task>() {
@@ -199,5 +178,6 @@ public class InMemoryTasksManager implements TaskManager{
         }
         return isValid;
     }
+
 
 }

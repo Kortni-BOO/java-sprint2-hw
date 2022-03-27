@@ -20,7 +20,6 @@ public interface TaskManager {
 
         public Task getTaskById(int id);
 
-
         //Добавление новой задачи, эпика и подзадачи.
         //Сам объект должен передаваться в качестве параметра.
         public void add(Task task);

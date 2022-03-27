@@ -24,7 +24,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return title + "," + subtitle + "," + getStatus() + "," + getId();
+        return title + "," + subtitle + "," + getStatus() + "," + getId()  + "," + startTime + "," + duration;
     }
 
 }

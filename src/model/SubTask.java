@@ -20,7 +20,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return title + "," + subtitle + "," + getStatus() + "," + getId() + "," + getEpicId() + "," + startTime;
+        return title + "," + subtitle + "," + getStatus() + "," + getId() + "," + getEpicId() + "," + startTime + "," + duration;
     }
 
 

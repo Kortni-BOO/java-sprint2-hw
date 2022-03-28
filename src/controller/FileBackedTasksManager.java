@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -134,18 +133,20 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         String[] lines = value.split("\\n");
         int epicID = 0;
         ArrayList<SubTask> subtasks = new ArrayList<>();
+        //-2
         for(int i = 1; i < lines.length - 2; i++) {
             String[] lineContents = lines[i].trim().split(",");
-            if (lineContents[1].equals(TypeTask.TASK)){
+            if (lineContents[1].equals("TASK")){
                 Task taskNew = new Task(lineContents[2], lineContents[4],
                         LocalDateTime.parse(lineContents[5], DATE_TIME_FORMATTER),
                         Long.parseLong(lineContents[6])
                 );
                 taskNew.setId(Integer.parseInt(lineContents[0]));
                 checkStatus(lineContents[3], taskNew);
+                System.out.println(taskNew);
                 task = taskNew;
                 store.put(task.getId(), task);
-            } else if (lineContents[1].equals(TypeTask.EPIC) ) {
+            } else if (lineContents[1].equals("EPIC") ) {
                 Epic epic = new Epic(lineContents[2], lineContents[4],
                         LocalDateTime.parse(lineContents[5], DATE_TIME_FORMATTER),
                         Long.parseLong(lineContents[6])

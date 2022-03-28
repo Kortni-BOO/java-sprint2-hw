@@ -1,9 +1,9 @@
 package controller;
 
 import model.Epic;
-import model.Status;
 import model.SubTask;
 import model.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -36,12 +36,16 @@ abstract class TaskManagerTest <T extends TaskManager> {
             1
     );
 
+    @BeforeEach
+    public void beforeEach() {
+        taskManager.resetId();
+        taskManager.removeTask();
+    }
     @Test
     public void shouldReturnAllTask() {
         taskManager.add(task);
         assertEquals(1, taskManager.getTask().size());
         assertEquals(task, taskManager.getTask().get(0));
-        taskManager.resetId();
     }
 
     @Test
@@ -50,8 +54,6 @@ abstract class TaskManagerTest <T extends TaskManager> {
         System.out.println(taskManager.getEpics().size());
         assertEquals(1, taskManager.getEpics().size());
         assertEquals(epic, taskManager.getEpics().get(0));
-        taskManager.resetId();
-        taskManager.removeTask();
     }
 
     @Test
@@ -64,8 +66,6 @@ abstract class TaskManagerTest <T extends TaskManager> {
         taskManager.getSubtaskByEpic(epic.getId());
         assertEquals(1, taskManager.getSubtaskByEpic(epic.getId()).size());
         assertEquals(subTask, taskManager.getSubtaskByEpic(epic.getId()).get(0));
-        taskManager.resetId();
-        taskManager.removeTask();
     }
 
     @Test
@@ -73,8 +73,6 @@ abstract class TaskManagerTest <T extends TaskManager> {
         taskManager.add(task);
         taskManager.getTaskById(task.getId());
         assertEquals(1,taskManager.getTaskById(task.getId()).getId());
-        taskManager.resetId();
-        taskManager.removeTask();
     }
 
     @Test
@@ -83,35 +81,26 @@ abstract class TaskManagerTest <T extends TaskManager> {
         Task taskNew = new Task("не тест", "test", LocalDateTime.now(), 2);
         taskManager.updateTask(task.getId(), taskNew);
         assertEquals(taskNew, taskManager.getTaskById(task.getId()));
-        taskManager.resetId();
-        taskManager.removeTask();
     }
 
     @Test
     public void shouldRemoveTask() {
-        taskManager.add(task);
+        taskManager.add(task3);
         taskManager.add(epic);
         taskManager.removeTask();
         assertEquals(0, taskManager.getTask().size());
         assertEquals(0, taskManager.getEpics().size());
-        taskManager.resetId();
-        taskManager.removeTask();
     }
 
     @Test
     public void shouldRemoveTaskById() {
         task.setId(1);
-        taskManager.add(task);
-        epic.setId(2);
-        taskManager.add(epic);
+        taskManager.add(task3);
         taskManager.removeTaskById(1);
         assertEquals(0, taskManager.getTask().size());
-        taskManager.resetId();
-        taskManager.removeTask();
     }
 
     // Обновление статуса Эпика отдельно проверяется в тестах EpicTest
-
 
     @Test
     public void shouldComputationTimeEpic() {
@@ -125,7 +114,6 @@ abstract class TaskManagerTest <T extends TaskManager> {
         taskManager.computationTimeEpic(epic);
         assertEquals(subTask.startTime, epic.startTime);
         assertEquals(61, epic.duration);
-        taskManager.removeTask();
     }
 
     @Test
@@ -135,7 +123,6 @@ abstract class TaskManagerTest <T extends TaskManager> {
         taskManager.getTask();
         taskManager.getEpics();
         assertEquals(2, taskManager.history().size());
-        taskManager.removeTask();
     }
 
     @Test
@@ -143,9 +130,7 @@ abstract class TaskManagerTest <T extends TaskManager> {
         taskManager.add(task2);// 22:00
         taskManager.add(task); //3:05
         assertEquals(taskManager.getTask().get(0), task2);
-        //taskManager.getPrioritizedTasks();
         assertEquals(taskManager.getPrioritizedTasks().first(), task);
-        taskManager.removeTask();
     }
 
 

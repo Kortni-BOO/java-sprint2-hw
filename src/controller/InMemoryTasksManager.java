@@ -18,6 +18,10 @@ public class InMemoryTasksManager implements TaskManager{
     protected int getNewId() {
         return ++newId;
     }
+    @Override
+    public void resetId() {
+        newId = 0;
+    }
 
     //Получение списка всех задач. Тут вернуть колекцию
     @Override
@@ -106,7 +110,9 @@ public class InMemoryTasksManager implements TaskManager{
             epic.getSubtask().clear();
         }
         store.remove(id);
-        newList.remove(id);
+        if(newList.size != 0) {
+            newList.remove(id);
+        }
     }
 
     //Обновление статуса эпика
@@ -147,7 +153,9 @@ public class InMemoryTasksManager implements TaskManager{
             time += duration.duration;
             epic.endTime = epic.startTime.plusMinutes(time);
         }
-        System.out.println(time);
+        epic.duration = time;
+        //System.out.println(time);
+
     }
 
     //Возвращает последние 10 просмотренных задач
@@ -180,7 +188,7 @@ public class InMemoryTasksManager implements TaskManager{
             }
         }
         tasks.addAll(tasksSort);
-        System.out.println("Method getPrioritizedTasks : " + tasks.toString());
+        //System.out.println("Method getPrioritizedTasks : " + tasks.toString());
         return tasks;
     }
 

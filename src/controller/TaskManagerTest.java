@@ -6,177 +6,146 @@ import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest <T extends TaskManager> {
-    protected static HashMap<Integer, Task> store = new HashMap<>();
-    protected static InMemoryHistoryManager newList = new InMemoryHistoryManager();
-    T element;
+    T taskManager;
+    ArrayList<SubTask> subtasks = new ArrayList<>();
+    Task task = new Task("testTask", "testTask",
+            LocalDateTime.of(2022, 12, 3, 3, 05),
+            120
+    );
+    Task task2 = new Task("testTask2", "testTask2",
+            LocalDateTime.of(2022, 12, 3, 22, 00),
+            120
+    );
+    Task task3 = new Task("testTask3", "testTask3",
+            LocalDateTime.of(2022, 12, 3, 22, 00),
+            120
+    );
+    Epic epic = new Epic("testEpic", "testEpic", LocalDateTime.now(), 0);
+    SubTask subTask = new SubTask("testSubTask1", "testSubtask1",
+            LocalDateTime.of(2022, 12, 3, 1, 00),
+            60
+    );
+    SubTask subTask2 = new SubTask("testSubTask2", "testSubTask2",
+            LocalDateTime.of(2022, 12, 3, 8, 55),
+            1
+    );
 
     @Test
     public void shouldReturnAllTask() {
-        element.getTask();
+        taskManager.add(task);
+        assertEquals(1, taskManager.getTask().size());
+        assertEquals(task, taskManager.getTask().get(0));
+        taskManager.resetId();
     }
 
-    //Получение списка всех задач. Тут вернуть колекцию
-    public ArrayList<Task> getTask() {
-        ArrayList<Task> tasks = new ArrayList<>();
-        for(Task task : store.values()) {
-            if(task.getClass() == Task.class) {
-                tasks.add(task);
-                newList.add(task);
-            }
-        }
-        return tasks;
+    @Test
+    public void shouldReturnAllEpic() {
+        taskManager.add(epic);
+        System.out.println(taskManager.getEpics().size());
+        assertEquals(1, taskManager.getEpics().size());
+        assertEquals(epic, taskManager.getEpics().get(0));
+        taskManager.resetId();
+        taskManager.removeTask();
     }
 
-    //Получение списка всех эпиков.
-    public ArrayList<Epic> getEpics() {
-        ArrayList<Epic> epics = new ArrayList<>();
-        for(Task epic : store.values()) {
-            if(epic.getClass() == Epic.class) {
-                epics.add((Epic)epic);
-                //storage.add((Epic)epic);
-                newList.add(epic);
-            }
-        }
-        return epics;
+    @Test
+    public void shouldReturnSubtaskByEpic() {
+        subtasks.add(subTask);
+        epic.setSubtasks(subtasks);
+        subTask.setEpicId(epic.getId());
+        taskManager.add(epic);
+        taskManager.add(subTask);
+        taskManager.getSubtaskByEpic(epic.getId());
+        assertEquals(1, taskManager.getSubtaskByEpic(epic.getId()).size());
+        assertEquals(subTask, taskManager.getSubtaskByEpic(epic.getId()).get(0));
+        taskManager.resetId();
+        taskManager.removeTask();
     }
 
-    //Получение списка всех подзадач определённого эпика.
-    public ArrayList<SubTask> getSubtaskByEpic(int id) {
-        ArrayList<SubTask> subTasks = new ArrayList<>();
-        if(!store.containsKey(id)) {
-            //System.out.println("l");
-            return null;
-        } else {
-            Epic epic = (Epic) store.get(id);
-            newList.add(epic);
-            subTasks.addAll(epic.getSubtask());
-            //System.out.println(subTasks);
-        }
-        //return epic.subTasks;
-        return subTasks;
+    @Test
+    public void shouldReturnTaskById() {
+        taskManager.add(task);
+        taskManager.getTaskById(task.getId());
+        assertEquals(1,taskManager.getTaskById(task.getId()).getId());
+        taskManager.resetId();
+        taskManager.removeTask();
     }
 
-    public Task getTaskById(int id) {
-        return store.get(id);
+    @Test
+    public void shouldUpdateTask() {
+        taskManager.add(task);
+        Task taskNew = new Task("не тест", "test", LocalDateTime.now(), 2);
+        taskManager.updateTask(task.getId(), taskNew);
+        assertEquals(taskNew, taskManager.getTaskById(task.getId()));
+        taskManager.resetId();
+        taskManager.removeTask();
     }
 
-    public abstract void add(Task task);
-
-    //Обновление задачи любого типа по идентификатору.
-    //Новая версия объекта передаётся в виде параметра.
-    public void updateTask(int id, Task task) {
-        task.setId(id);
-        if(checkTime(task)) {
-            store.put(id, task);
-        }
-        //store.put(id, task);
+    @Test
+    public void shouldRemoveTask() {
+        taskManager.add(task);
+        taskManager.add(epic);
+        taskManager.removeTask();
+        assertEquals(0, taskManager.getTask().size());
+        assertEquals(0, taskManager.getEpics().size());
+        taskManager.resetId();
+        taskManager.removeTask();
     }
 
-    //Удаление ранее добавленных задач — всех.
-    public void removeTask() {
-        store.clear();
+    @Test
+    public void shouldRemoveTaskById() {
+        task.setId(1);
+        taskManager.add(task);
+        epic.setId(2);
+        taskManager.add(epic);
+        taskManager.removeTaskById(1);
+        assertEquals(0, taskManager.getTask().size());
+        taskManager.resetId();
+        taskManager.removeTask();
     }
 
-    //Удаление ранее добавленных задач — по идентификатору.
-    public void removeTaskById(int id){
-        if(store.get(id).getClass() == Epic.class) {
-            Epic epic = (Epic) store.get(id);
-            epic.getSubtask().clear();
-        }
-        store.remove(id);
-        newList.remove(id);
+    // Обновление статуса Эпика отдельно проверяется в тестах EpicTest
+
+
+    @Test
+    public void shouldComputationTimeEpic() {
+        epic.setId(1);
+        taskManager.add(epic);
+        subTask.setId(2);
+        subtasks.add(subTask);
+        subTask2.setId(3);
+        subtasks.add(subTask2);
+        epic.setSubtasks(subtasks);
+        taskManager.computationTimeEpic(epic);
+        assertEquals(subTask.startTime, epic.startTime);
+        assertEquals(61, epic.duration);
+        taskManager.removeTask();
     }
 
-    //Обновление статуса эпика
-    public void updateStatusEpic(Epic epic) {
-        ArrayList<Status> sub = new ArrayList<>();
-        for (SubTask status : epic.getSubtask()) {
-            sub.add(status.getStatus());
-        }
-        if(sub.isEmpty()) {
-            epic.setStatus(Status.NEW);
-        }
-        for(int i = 0; i < sub.size(); i++) {
-            if(sub.contains(Status.NEW) && sub.contains(Status.DONE)) {
-                epic.setStatus(Status.IN_PROGRESS);
-            } else {
-                epic.setStatus(sub.get(i));
-            }
-        }
+    @Test
+    public void shouldReturnHistory() {
+        taskManager.add(task);
+        taskManager.add(epic);
+        taskManager.getTask();
+        taskManager.getEpics();
+        assertEquals(2, taskManager.history().size());
+        taskManager.removeTask();
     }
 
-    public void computationTimeEpic(Epic epic) {
-        ArrayList<SubTask> sub = epic.getSubtask();
-        epic.startTime = epic.getSubtask().get(0).startTime;
-        if(sub.size() > 1) {
-            for(int i = 0; i < sub.size(); i++) {
-                for(int j = 0; j < sub.size(); j++) {
-                    if(sub.get(i).startTime.isBefore(sub.get(j).startTime)) {
-                        epic.startTime = sub.get(i).startTime;
-                    }
-                }
-            }
-        }
-        System.out.println("Method computationTimeEpic epic.startTime = " + epic.startTime);
-        long time = 0;
-        for (SubTask duration : epic.getSubtask()) {
-            time += duration.duration;
-            epic.endTime = epic.startTime.plusMinutes(time);
-        }
-        System.out.println(time);
-    }
-
-    //Возвращает последние просмотренных задач
-    public List<Task> history() {
-        List<Task> storage = newList.getHistory();
-        return storage;
-    }
-
-    public TreeSet<Task> getPrioritizedTasks() {
-        //Set<Ticket> tickets = new TreeSet<>(comparator);
-        Comparator<Task> comparator = new Comparator<Task>() {
-            @Override
-            public int compare(Task o1, Task o2) {
-                if(o1.startTime.isAfter(o2.startTime)) {
-                    return 1;
-                } else if (o1.startTime.isBefore(o2.startTime)) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            }
-        };
-        TreeSet<Task> tasks = new TreeSet<>(comparator);
-        ArrayList<Task> tasksSort = new ArrayList<>();
-        for(Task taskClass : store.values()) {
-            if(taskClass.getClass() == Task.class || taskClass.getClass() == SubTask.class) {
-                tasksSort.add(taskClass);
-            }
-        }
-        tasks.addAll(tasksSort);
-        System.out.println("Method getPrioritizedTasks : " + tasks.toString());
-        return tasks;
-    }
-
-    // Проверка на задачу с уже заданныи временем
-    public boolean checkTime(Task task) {
-        boolean isValid = true;
-        for(Task taskNow : store.values()) {
-            if(task.startTime.equals(taskNow.startTime)) {
-                System.out.println("Данное время " + task.startTime + " занято задачей " + taskNow.title +
-                        ". Новая задача  " + task.title + " на время " + task.startTime + " не добавленна."
-                );
-                isValid = false;
-            } else {
-                isValid = true;
-            }
-        }
-        return isValid;
+    @Test
+    public void shouldGetPrioritizedTasks() {
+        taskManager.add(task2);// 22:00
+        taskManager.add(task); //3:05
+        assertEquals(taskManager.getTask().get(0), task2);
+        //taskManager.getPrioritizedTasks();
+        assertEquals(taskManager.getPrioritizedTasks().first(), task);
+        taskManager.removeTask();
     }
 
 

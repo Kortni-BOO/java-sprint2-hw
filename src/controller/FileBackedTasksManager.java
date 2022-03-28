@@ -30,6 +30,12 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     @Override
+    public void resetId() {
+        //newId = 0;
+        super.resetId();
+    }
+
+    @Override
     public void add(Task task){
         super.add(task);
         save();
@@ -41,6 +47,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         save();
         return tasks;
     }
+
 
     @Override
     public ArrayList<Epic> getEpics() {
@@ -177,7 +184,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     //метод для сохранения менеджера истории
-    public static String historyToString(HistoryManager manager){
+    public static String historyToString(HistoryManager manager) {
         StringBuilder builder = new StringBuilder();
         for(Task k : manager.getHistory()) {
             builder.append(k.getId() + ",");
@@ -188,7 +195,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     //метод для востановления менеджера истории из CSV
     public static List<Integer> historyFromString(String value) throws IOException {
-        //String val = Files.readString(Path.of("/Users/makbookair/Desktop/java-sprint2-hw/src/resources/history.csv"));
         String[] list = value.split("\\n");
         String[] id = list[list.length - 1].split(",");
         List<Integer> ids = new ArrayList<>();
@@ -220,7 +226,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     public static void main(String[] args) throws IOException {
-
+        /*
         Task task = new Task("Купить помидорки", "На салат",
                 LocalDateTime.of(2022, 12, 3, 4, 55),
                 121
@@ -306,6 +312,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         epic.setSubtasks(suub);
         fileBackedTasksManager.updateStatusEpic(epic1);
         System.out.println("EPIC status : " + epic1.getStatus());
+        */
     }
 
 }

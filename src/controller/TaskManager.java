@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.TreeSet;
 
 public interface TaskManager {
+
+        public void resetId();
         //Получение списка всех задач. Тут вернуть колекцию
         public ArrayList<Task> getTask();
 

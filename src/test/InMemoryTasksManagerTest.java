@@ -1,4 +1,7 @@
-package controller;
+package test;
+
+import controller.InMemoryTasksManager;
+import test.TaskManagerTest;
 
 class InMemoryTasksManagerTest extends TaskManagerTest<InMemoryTasksManager> {
 

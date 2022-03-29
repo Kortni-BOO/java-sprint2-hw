@@ -22,7 +22,6 @@ import model.Task;
 public class FileBackedTasksManager extends InMemoryTasksManager {
     public File file;
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("mm");
 
     public FileBackedTasksManager(File file) {
         this.file = file;

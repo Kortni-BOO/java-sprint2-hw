@@ -1,5 +1,6 @@
-package controller;
+package test;
 
+import controller.InMemoryHistoryManager;
 import model.Task;
 import org.junit.jupiter.api.Test;
 

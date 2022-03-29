@@ -1,6 +1,10 @@
-package model;
+package test;
 
 import controller.InMemoryTasksManager;
+import model.Epic;
+import model.Status;
+import model.SubTask;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -19,7 +23,7 @@ class EpicTest {
     public void shouldStatusNewNotSubtaskUpdateStatusEpic() {
         epic.setSubtasks(subtasks);
         inMemoryTasksManager.updateStatusEpic(epic);
-        assertEquals(Status.NEW, epic.getStatus());
+        Assertions.assertEquals(Status.NEW, epic.getStatus());
     }
 
     @Test

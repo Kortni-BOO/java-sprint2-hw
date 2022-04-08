@@ -24,12 +24,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
             "1,";
 
     public FileBackedTasksManagerTest() {
-        this.taskManager = new FileBackedTasksManager(file);
+        this.taskManager = new FileBackedTasksManager();
     }
 
     //метод сохранения задачи в строку тестируется в методе save
     @Test
-    public void shouldSaveInFile() throws IOException {
+    public void shouldSaveInFile() throws IOException, InterruptedException {
         String value = Files.readString(Path.of(file.getPath()));
         String test = value.trim();
         taskManager.add(task);

@@ -5,14 +5,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.TreeSet;
 
+import API.HttpTaskServer;
+import API.KVServer;
+import API.KVTaskClient;
 import error.ManagerSaveException;
 import model.Epic;
 import model.Status;
@@ -20,12 +28,14 @@ import model.SubTask;
 import model.Task;
 
 public class FileBackedTasksManager extends InMemoryTasksManager {
-    public File file;
+    File file = new File("./src/resources", "history.csv");
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
 
-    public FileBackedTasksManager(File file) {
-        this.file = file;
+    /*
+    public FileBackedTasksManager() {
+        file = new File("./src/resources", "history.csv");
     }
+     */
 
     @Override
     public void resetId() {
@@ -34,7 +44,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     @Override
-    public void add(Task task){
+    public void add(Task task) {
         super.add(task);
         save();
     }
@@ -124,7 +134,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     //метод создания задачи из строки String value
-    public static Task fromString(String value) {
+    public Task fromString(String value) {
         Task task = new Task("Тест", "test",
                 LocalDateTime.of(2022, 12, 3, 8, 55),
                 121
@@ -212,8 +222,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
 
-    static FileBackedTasksManager loadFromFile(File file) throws IOException {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+    public FileBackedTasksManager loadFromFile(File file) throws IOException {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         String value = Files.readString(Path.of(file.getPath()));
         fromString(value);
         List<Integer> ids = new ArrayList<>();
@@ -225,19 +235,22 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return fileBackedTasksManager;
     }
 
-    public static void main(String[] args) throws IOException {
-        /*
+    public static void main(String[] args) throws IOException, InterruptedException {
+
         Task task = new Task("Купить помидорки", "На салат",
                 LocalDateTime.of(2022, 12, 3, 4, 55),
                 121
         );
+        /*
         task.setStatus(Status.NEW);
         System.out.println("Это 1 " + task.getId());
 
         File file = new File("./src/resources", "history.csv");
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
 
-        fileBackedTasksManager.getTask();
+        fileBackedTasksManager.add(task);
+        */
+        //fileBackedTasksManager.getTask();
         ArrayList<SubTask> subtasks = new ArrayList<>();
         Epic epic = new Epic("Найти второй носок", "С китами",
                 LocalDateTime.of(2022, 12, 3, 8, 55),
@@ -245,7 +258,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         );
 
         epic.setStatus(Status.DONE);
-        fileBackedTasksManager.add(epic);
+        //fileBackedTasksManager.add(epic);
         SubTask subtask = new SubTask("Разобрать ящик", "в комнате",
                 LocalDateTime.of(2022, 12, 3, 6, 00),
                 20
@@ -256,6 +269,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 LocalDateTime.of(2022, 12, 3, 10, 55),
                 21
         );
+        //fileBackedTasksManager.add(subtask1);
         subtask1.setEpicId(epic.getId());
         subtask1.setStatus(Status.NEW);
         SubTask subtask2 = new SubTask("Помыть машину", "и коврики",
@@ -263,6 +277,11 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 139);
         subtask2.setEpicId(epic.getId());
 
+        /*
+
+                URI url = URI.create("http://localhost:8078/register");
+        HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
+        httpTaskManager.save();
 
 
         subtask2.setStatus(Status.NEW);
@@ -312,7 +331,46 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         epic.setSubtasks(suub);
         fileBackedTasksManager.updateStatusEpic(epic1);
         System.out.println("EPIC status : " + epic1.getStatus());
+
+         */
+
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        //httpTaskServer.start();
+        new KVServer().start();
+
+        URI url = URI.create("http://localhost:8078/register");
+        HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
+        httpTaskManager.add(task);
+        httpTaskManager.add(epic);
+        httpTaskManager.add(subtask);
+        httpTaskServer.start();
+        //httpTaskServer.stop(1);
+        //httpTaskManager.saveJson();
+        //httpTaskManager.fromJson("data");
+
+/*
+        new KVServer().start();
+
+        KVTaskClient kv = new KVTaskClient();
+        kv.load("task");
+        System.out.println(kv.apiKey);
+
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8078/register");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+        //HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+
+
+        // получаем стандартный обработчик тела запроса с конвертацией содержимого в строку
+        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+
+        // отправляем запрос и получаем ответ от сервера
+        HttpResponse<String> response = client.send(request, handler);
+        String apiKey = response.body();
+        System.out.println(apiKey);
         */
+
     }
 
 }

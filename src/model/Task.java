@@ -1,5 +1,7 @@
 package model;
 
+import controller.TypeTask;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,12 +14,14 @@ public class Task {
     public LocalDateTime startTime;
     public long duration;
     public LocalDateTime endTime;
+    public TypeTask typeTask;
 
     public Task(String title, String subtitle, LocalDateTime startTime, long duration) {
         this.title = title;
         this.subtitle = subtitle;
         this.startTime = startTime;
         this.duration = duration;
+        //this.typeTask = typeTask;
     }
 
     public void getEndTime() {

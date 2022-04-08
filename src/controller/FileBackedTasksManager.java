@@ -241,16 +241,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 LocalDateTime.of(2022, 12, 3, 4, 55),
                 121
         );
-        /*
-        task.setStatus(Status.NEW);
-        System.out.println("Это 1 " + task.getId());
-
-        File file = new File("./src/resources", "history.csv");
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-
-        fileBackedTasksManager.add(task);
-        */
-        //fileBackedTasksManager.getTask();
         ArrayList<SubTask> subtasks = new ArrayList<>();
         Epic epic = new Epic("Найти второй носок", "С китами",
                 LocalDateTime.of(2022, 12, 3, 8, 55),
@@ -258,7 +248,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         );
 
         epic.setStatus(Status.DONE);
-        //fileBackedTasksManager.add(epic);
         SubTask subtask = new SubTask("Разобрать ящик", "в комнате",
                 LocalDateTime.of(2022, 12, 3, 6, 00),
                 20
@@ -269,7 +258,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 LocalDateTime.of(2022, 12, 3, 10, 55),
                 21
         );
-        //fileBackedTasksManager.add(subtask1);
+
         subtask1.setEpicId(epic.getId());
         subtask1.setStatus(Status.NEW);
         SubTask subtask2 = new SubTask("Помыть машину", "и коврики",
@@ -277,12 +266,21 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 139);
         subtask2.setEpicId(epic.getId());
 
-        /*
+        HttpTaskServer httpTaskServer = new HttpTaskServer();
 
-                URI url = URI.create("http://localhost:8078/register");
+        new KVServer().start();
+
+        URI url = URI.create("http://localhost:8078/register");
+        HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
+        httpTaskManager.add(task);
+        httpTaskManager.add(epic);
+        httpTaskManager.add(subtask);
+        httpTaskServer.start();
+
+        /*
+        URI url = URI.create("http://localhost:8078/register");
         HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
         httpTaskManager.save();
-
 
         subtask2.setStatus(Status.NEW);
         subtasks.add(subtask);
@@ -334,16 +332,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
          */
 
-        HttpTaskServer httpTaskServer = new HttpTaskServer();
-        //httpTaskServer.start();
-        new KVServer().start();
-
-        URI url = URI.create("http://localhost:8078/register");
-        HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
-        httpTaskManager.add(task);
-        httpTaskManager.add(epic);
-        httpTaskManager.add(subtask);
-        httpTaskServer.start();
         //httpTaskServer.stop(1);
         //httpTaskManager.saveJson();
         //httpTaskManager.fromJson("data");

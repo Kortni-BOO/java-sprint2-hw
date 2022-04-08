@@ -20,7 +20,6 @@ public class KVTaskClient {
                 .GET()
                 .uri(uri)
                 .build();
-
         // получаем стандартный обработчик тела запроса с конвертацией содержимого в строку
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
 
@@ -47,7 +46,6 @@ public class KVTaskClient {
                                     new JsonPrimitive(src.toString())
                     )
                     .create();
-
             String jsonTask = gson.toJson(json);
             System.out.println("JSON " + jsonTask.getClass());
             uri = URI.create("http://localhost:8078/save/" + key + "?API_KEY=" + apiKey);

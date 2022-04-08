@@ -1,16 +1,13 @@
 package controller;
 
 import API.KVTaskClient;
-import com.google.gson.*;
-import error.ManagerSaveException;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class HTTPTaskManager  extends FileBackedTasksManager {
@@ -73,8 +70,55 @@ public class HTTPTaskManager  extends FileBackedTasksManager {
 
     @Override
     public Task fromString(String value) {
-        super.fromString(value);
-        return super.fromString(value);
+        Task task = new Task("Тест", "test",
+                LocalDateTime.of(2022, 12, 3, 8, 55),
+                121
+        );
+        int epicID = 0;
+        ArrayList<SubTask> subtasks = new ArrayList<>();
+        String line = value.substring(1, value.length() - 1);
+        String[] lineContents = line.trim().split(",");
+        if (lineContents[1].equals("TASK")){
+            Task taskNew = new Task(lineContents[2], lineContents[4],
+                    LocalDateTime.parse(lineContents[5], DATE_TIME_FORMATTER),
+                    Long.parseLong(lineContents[6])
+            );
+            taskNew.setId(Integer.parseInt(lineContents[0]));
+            checkStatus(lineContents[3], taskNew);
+            System.out.println(taskNew);
+            task = taskNew;
+            store.put(taskNew.getId(), taskNew);
+        } else if (lineContents[1].equals("EPIC") ) {
+            Epic epic = new Epic(lineContents[2], lineContents[4],
+                    LocalDateTime.parse(lineContents[5], DATE_TIME_FORMATTER),
+                    Long.parseLong(lineContents[6])
+            );
+            epic.setId(Integer.parseInt(lineContents[0]));
+            checkStatus(lineContents[3], epic);
+            epicID = epic.getId();
+            task = epic;
+            store.put(task.getId(), task);
+        }  if (lineContents[1].equals("SUBTASK")) {
+            if(Integer.parseInt(lineContents[5]) == epicID) {
+                SubTask subtask = new SubTask(lineContents[2], lineContents[4],
+                        LocalDateTime.parse(lineContents[6], DATE_TIME_FORMATTER),
+                        Long.parseLong(lineContents[7])
+                );
+                subtask.setEpicId(epicID);
+                subtask.setId(Integer.parseInt(lineContents[0]));
+                checkStatus(lineContents[3], subtask);
+                subtasks.add(subtask);
+                task = subtask;
+                store.put(task.getId(), task);
+            }
+        }
+
+        return task;
+    }
+
+    public void loadFromServer(String data) {
+        String task = kv.load(data);
+        fromString(task);
     }
 
 }

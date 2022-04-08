@@ -275,89 +275,12 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         httpTaskManager.add(task);
         httpTaskManager.add(epic);
         httpTaskManager.add(subtask);
-        httpTaskServer.start();
-
-        /*
-        URI url = URI.create("http://localhost:8078/register");
-        HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
         httpTaskManager.save();
+        httpTaskServer.start();
+        httpTaskManager.loadFromServer("task");
+        httpTaskManager.loadFromServer("epic");
+        httpTaskManager.loadFromServer("subtask");
 
-        subtask2.setStatus(Status.NEW);
-        subtasks.add(subtask);
-        subtasks.add(subtask1);
-        subtasks.add(subtask2);
-        fileBackedTasksManager.add(task);
-        System.out.println("Это 2 " + task.getId());
-
-        epic.setSubtasks(subtasks);
-
-        System.out.println("Sub " + epic.getSubtask());
-
-        epic.setSubtasks(subtasks);
-        fileBackedTasksManager.add(subtask);
-        fileBackedTasksManager.add(subtask1);
-        fileBackedTasksManager.getTask();
-        fileBackedTasksManager.save();
-
-        Task task3 = new Task("Пить чай без сахара", "зеленый",
-                LocalDateTime.of(2022, 12, 3, 2, 55),
-                121
-        );
-        task3.setStatus(Status.NEW);
-
-        System.out.println("_____________________________________________________________________________________");
-        Task task2 = new Task("Купить вкусняшки", "Для Хло",
-                LocalDateTime.of(2022, 12, 3, 2, 55),
-                121
-        );
-
-        System.out.println("NEW=============================================================================NEW");
-        //System.out.println(epic.endTime);
-        task.setStatus(Status.NEW);
-        fileBackedTasksManager.computationTimeEpic(epic);
-        System.out.println("EndTime " + epic.endTime);
-        fileBackedTasksManager.add(task2);
-        fileBackedTasksManager.add(task3);
-        fileBackedTasksManager.getPrioritizedTasks();
-        loadFromFile(file);
-
-        Epic epic1 = new Epic("Найти второй носок", "С китами",
-                LocalDateTime.of(2022, 12, 3, 8, 55),
-                12
-        );
-        ArrayList<SubTask> suub = new ArrayList<>();
-        epic.setSubtasks(suub);
-        fileBackedTasksManager.updateStatusEpic(epic1);
-        System.out.println("EPIC status : " + epic1.getStatus());
-
-         */
-
-        //httpTaskServer.stop(1);
-        //httpTaskManager.saveJson();
-        //httpTaskManager.fromJson("data");
-
-/*
-        new KVServer().start();
-
-        KVTaskClient kv = new KVTaskClient();
-        kv.load("task");
-        System.out.println(kv.apiKey);
-
-        HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8078/register");
-        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
-        //HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-
-
-        // получаем стандартный обработчик тела запроса с конвертацией содержимого в строку
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-
-        // отправляем запрос и получаем ответ от сервера
-        HttpResponse<String> response = client.send(request, handler);
-        String apiKey = response.body();
-        System.out.println(apiKey);
-        */
 
     }
 

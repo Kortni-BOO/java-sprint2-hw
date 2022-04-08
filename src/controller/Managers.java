@@ -7,16 +7,6 @@ import java.io.IOException;
 import java.net.URI;
 
 public class Managers {
-    /*
-    public static InMemoryTasksManager getDefault() {
-        return new InMemoryTasksManager();
-    }
-
-    public static FileBackedTasksManager getDefault() throws IOException {
-        File file = new File("./src/resources", "history.csv");
-        return new FileBackedTasksManager();
-    }
-    */
     public static FileBackedTasksManager getDefaultFl() throws IOException {
         File file = new File("./src/resources", "history.csv");
         return new FileBackedTasksManager();

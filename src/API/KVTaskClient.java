@@ -75,12 +75,8 @@ public class KVTaskClient {
         try {
             final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             JsonElement jsonElement = JsonParser.parseString(response.body());
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
-            for(int i = 0; i < jsonArray.size(); i++) {
-                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
-                System.out.println(jsonObject.toString());
-                text = jsonObject.toString();
-            }
+            System.out.println(jsonElement.getClass());
+            text = jsonElement.toString();
 
         } catch (IOException | InterruptedException e) { // обрабатываем ошибки отправки запроса
             System.out.println("Во время выполнения запроса возникла ошибка.\n" +

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
-    public static final int PORT = 8080;
+    private static final int PORT = 8080;
     private HttpServer server;
 
     public HttpTaskServer() throws IOException, InterruptedException {

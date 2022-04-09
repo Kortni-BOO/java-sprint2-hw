@@ -6,9 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -20,7 +17,6 @@ import java.util.TreeSet;
 
 import API.HttpTaskServer;
 import API.KVServer;
-import API.KVTaskClient;
 import error.ManagerSaveException;
 import model.Epic;
 import model.Status;
@@ -30,12 +26,6 @@ import model.Task;
 public class FileBackedTasksManager extends InMemoryTasksManager {
     File file = new File("./src/resources", "history.csv");
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
-
-    /*
-    public FileBackedTasksManager() {
-        file = new File("./src/resources", "history.csv");
-    }
-     */
 
     @Override
     public void resetId() {

@@ -8,12 +8,9 @@ import controller.Managers;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 public class SubTaskHandle implements HttpHandler {
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     FileBackedTasksManager fileBackedTasksManager;
 
     public SubTaskHandle() throws IOException {

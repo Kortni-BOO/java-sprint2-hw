@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 class HttpTaskServerTest {
     HttpTaskServer httpTaskServer;
     Task task = new Task("test", "test", LocalDateTime.now(), 120);
-    Task taskUpdate = new Task("testUprade", "testUpdate", LocalDateTime.now(), 120);
     HttpClient client =  HttpClient.newHttpClient();
     URI url;
     GsonBuilder gsonBuilder = new GsonBuilder();

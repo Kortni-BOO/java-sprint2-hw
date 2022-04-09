@@ -1,6 +1,6 @@
 # java-sprint2-hw
 Second sprint homework
-###Class HTTPTaskServer:
+<h3>Class HTTPTaskServer:</h3>
 <h1 align="center"> HTTP Method: </h1>
 <h3>GET /tasks:</h3>
 No parameters, 
